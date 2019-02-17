@@ -14,21 +14,21 @@ module.exports = function validateReg(regInput) {
     errors.name = "Name field is required";
   }
 
+  if (!validator.isEmail(regInput.email)) {
+    errors.email = "Email is invalid";
+  }
   if (validator.isEmpty(regInput.email)) {
     errors.email = "Email field is required";
   }
 
-  if (!validator.isEmail(regInput.email)) {
-    errors.email = "Email is invalid";
+  if (!validator.isLength(regInput.password, { min: 6, max: 25 })) {
+    errors.password = "Password must be between 6 and 25 characters";
   }
 
   if (validator.isEmpty(regInput.password)) {
     errors.password = "Password field is required";
   }
 
-  if (!validator.isLength(regInput.password, { min: 6, max: 25 })) {
-    errors.password = "Password must be between 6 and 25 characters";
-  }
   return {
     errors,
     validation: emptyInput(errors)
