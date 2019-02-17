@@ -4,6 +4,7 @@ const dbURI = require("./config/keys").MONGOURI;
 const bodyParser = require("body-parser");
 const posts = require("./routes/api/posts");
 const profile = require("./routes/api/profile");
+const passport = require("passport");
 
 const app = express();
 
@@ -17,7 +18,12 @@ mongoose
   .then(() => console.log("connected to db"))
   .catch(err => console.log(err));
 
-app.get("/", (req, res) => res.send("hi there!"));
+//app.get("/", (req, res) => res.send("hi there!"));
+
+//using passport
+app.use(passport.initialize());
+//using jwt strategy of passport
+require("./config/passport")(passport);
 
 app.use("/api/users", users);
 app.use("/api/posts", posts);
