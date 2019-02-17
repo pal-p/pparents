@@ -1,7 +1,7 @@
 const validator = require("validator");
 const emptyInput = require("./checkEmpty");
 
-module.exports = function validateRegion(regInput) {
+module.exports = function validateReg(regInput) {
   let errors = {};
   regInput.name = !emptyInput(regInput.name) ? regInput.name : "";
   regInput.email = !emptyInput(regInput.email) ? regInput.email : "";
