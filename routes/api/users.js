@@ -77,7 +77,11 @@ router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    res.json({ msg: "success cur user" });
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    }); //req.user comes from passport auth
   }
 );
 module.exports = router;
