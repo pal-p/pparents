@@ -12,10 +12,10 @@ const validateReg = require("../../validation/register");
 router.get("/test", (req, res) => res.json({ msg: "users is working" }));
 
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateReg(req.body);
+  const { errors, validation } = validateReg(req.body);
 
   // Check Validation
-  if (!isValid) {
+  if (!validation) {
     return res.status(400).json(errors);
   }
   User.findOne({ email: req.body.email }).then(user => {
