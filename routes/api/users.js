@@ -9,12 +9,13 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
 const validateReg = require("../../validation/register");
+const validateLogin = require("../../validation/login");
+
 router.get("/test", (req, res) => res.json({ msg: "users is working" }));
 
 router.post("/register", (req, res) => {
+  //input validation check
   const { errors, validation } = validateReg(req.body);
-
-  // Check Validation
   if (!validation) {
     return res.status(400).json(errors);
   }
@@ -47,12 +48,17 @@ router.post("/register", (req, res) => {
   });
 });
 router.post("/login", (req, res) => {
+  //input validation check
+  const { errors, validation } = validateLogin(req.body);
+  if (!validation) {
+    return res.status(400).json(errors);
+  }
   const email = req.body.email;
   const password = req.body.password;
-
   //find user in db
   User.findOne({ email }).then(user => {
     if (!user) {
+      console.log("i think no user no");
       return res.status(404).json({ email: "user not found" });
     }
     bcrypt.compare(password, user.password).then(isMatched => {
