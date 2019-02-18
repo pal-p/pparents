@@ -17,7 +17,7 @@ const profileSchema = new Schema({
     type: String
     //required: true
   },
-  BabyMedicalIssues: {
+  BabyBirthIssues: {
     type: [String],
     required: true
   },
