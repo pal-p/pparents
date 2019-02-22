@@ -51,16 +51,16 @@ const profileSchema = new Schema({
   momHealthIssues: [
     {
       problem: {
-        type: String
-        //required: true
+        type: String,
+        required: true
       },
       treatment: {
-        type: String
-        // required: true
+        type: String,
+        required: true
       },
       from: {
-        type: Date
-        //required: true
+        type: Date,
+        required: true
       },
       to: {
         type: Date

@@ -8,6 +8,7 @@ require("../../models/Profile");
 const Profile = mongoose.model("profiles");
 const validateProfile = require("../../validation/profile");
 const validateMH = require("../../validation/momHospt");
+const validateMHI = require("../../validation/momHealthI");
 
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
@@ -125,6 +126,10 @@ router.post(
   "/momHealthIssues",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, validation } = validateMHI(req.body);
+    if (!validation) {
+      return res.status(400).json(errors);
+    }
     Profile.findOne({ user: req.user.id }).then(profile => {
       const tempv = {
         problem: req.body.problem,
@@ -135,7 +140,7 @@ router.post(
         description: req.body.description
       };
 
-      // add the hospitalisation on top
+      // add the health issues on top
       profile.momHealthIssues.unshift(tempv);
 
       profile.save().then(profile => res.json(profile));
