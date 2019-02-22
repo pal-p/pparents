@@ -147,4 +147,26 @@ router.post(
     });
   }
 );
+//add babyMedIssues to profile
+router.post(
+  "/babyMedIssues",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const tempv = {
+        illness: req.body.illness,
+        treatment: req.body.treatment,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        description: req.body.description
+      };
+
+      // add the babyMedIssues issues on top
+      profile.babyMedIssues.unshift(tempv);
+
+      profile.save().then(profile => res.json(profile));
+    });
+  }
+);
 module.exports = router;

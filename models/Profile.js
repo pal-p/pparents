@@ -108,7 +108,6 @@ const profileSchema = new Schema({
       },
       treatment: {
         type: String
-        //required: true
       },
       from: {
         type: Date
