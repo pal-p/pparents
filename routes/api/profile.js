@@ -9,6 +9,7 @@ const Profile = mongoose.model("profiles");
 const validateProfile = require("../../validation/profile");
 const validateMH = require("../../validation/momHospt");
 const validateMHI = require("../../validation/momHealthI");
+const validateBMI = require("../../validation/babyMedI");
 
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
@@ -152,6 +153,10 @@ router.post(
   "/babyMedIssues",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, validation } = validateBMI(req.body);
+    if (!validation) {
+      return res.status(400).json(errors);
+    }
     Profile.findOne({ user: req.user.id }).then(profile => {
       const tempv = {
         illness: req.body.illness,

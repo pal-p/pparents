@@ -103,15 +103,15 @@ const profileSchema = new Schema({
   babyMedIssues: [
     {
       illness: {
-        type: String
-        //required: true
+        type: String,
+        required: true
       },
       treatment: {
         type: String
       },
       from: {
-        type: Date
-        //required: true
+        type: Date,
+        required: true
       },
       to: {
         type: Date
