@@ -7,7 +7,8 @@ const User = mongoose.model("users");
 require("../../models/Profile");
 const Profile = mongoose.model("profiles");
 const validateProfile = require("../../validation/profile");
-//const validateMH = require("../../validation/momHospitalisation");
+const validateMH = require("../../validation/momHospt");
+
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
 //get request to .../api/profile
@@ -97,6 +98,10 @@ router.post(
   "/momHospitalisation",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, validation } = validateMH(req.body);
+    if (!validation) {
+      return res.status(400).json(errors);
+    }
     Profile.findOne({ user: req.user.id }).then(profile => {
       const temp = {
         problem: req.body.problem,
