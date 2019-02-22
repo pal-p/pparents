@@ -74,32 +74,30 @@ const profileSchema = new Schema({
       }
     }
   ],
-  nicu: [
-    {
-      hospital: {
-        type: String,
-        required: true
-      },
-      location: {
-        type: String,
-        required: true
-      },
-      from: {
-        type: Date,
-        required: true
-      },
-      to: {
-        type: Date
-      },
-      current: {
-        type: Boolean,
-        default: false
-      },
-      description: {
-        type: String
-      }
+  nicu: {
+    hospital: {
+      type: String,
+      required: true
+    },
+    location: {
+      type: String,
+      required: true
+    },
+    from: {
+      type: Date,
+      required: true
+    },
+    to: {
+      type: Date
+    },
+    current: {
+      type: Boolean,
+      default: false
+    },
+    description: {
+      type: String
     }
-  ],
+  },
   babyMedIssues: [
     {
       illness: {
