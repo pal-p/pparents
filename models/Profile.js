@@ -5,11 +5,6 @@ const profileSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users"
   },
-  handle: {
-    type: String,
-    required: true,
-    max: 40
-  },
   location: {
     type: String
   },
@@ -17,7 +12,7 @@ const profileSchema = new Schema({
     type: String
     //required: true
   },
-  BabyBirthIssues: {
+  babyBirthIssues: {
     type: [String],
     required: true
   },
