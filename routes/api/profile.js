@@ -63,13 +63,18 @@ router.post(
   }
 );
 
-/* if (req.body.momHospitalisation) profileData.momHospitalisation = req.body.momHospitalisation;
-    if (req.body.momHealthIssues) profileData.momHealthIssues = req.body.momHealthIssues;
-    
-    if (req.body.) profileData. = req.body.;
-    if (req.body.) profileData. = req.body.;
-    if (req.body.) profileData. = req.body.;
-    if (req.body.) profileData. = req.body.;
-    if (req.body.) profileData. = req.body.;*/
+router.get("/user/:user_id", (req, res) => {
+  Profile.findOne({ user: req.params.user_id })
+    .populate("user", ["name", "picture"])
+    .then(profile => {
+      if (!profile) {
+        res.status(404).json({ profile: "No profile exists for this user" });
+      }
 
+      res.json(profile);
+    }) // if user id in the url is invalid
+    .catch(err =>
+      res.status(404).json({ profile: "No profile exists for this user" })
+    );
+});
 module.exports = router;
