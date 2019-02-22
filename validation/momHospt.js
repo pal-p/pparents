@@ -1,7 +1,7 @@
 const validator = require("validator");
 const emptyInput = require("./checkEmpty");
 
-module.exports = function validateProfile(mhInput) {
+module.exports = function validateMH(mhInput) {
   let errors = {};
 
   mhInput.problem = !emptyInput(mhInput.problem) ? mhInput.problem : "";

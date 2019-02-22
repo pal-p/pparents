@@ -120,4 +120,26 @@ router.post(
     });
   }
 );
+//add momHealthIssues to profile
+router.post(
+  "/momHealthIssues",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const tempv = {
+        problem: req.body.problem,
+        treatment: req.body.treatment,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        description: req.body.description
+      };
+
+      // add the hospitalisation on top
+      profile.momHealthIssues.unshift(tempv);
+
+      profile.save().then(profile => res.json(profile));
+    });
+  }
+);
 module.exports = router;
