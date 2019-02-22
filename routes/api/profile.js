@@ -62,6 +62,19 @@ router.post(
     });
   }
 );
+router.get("/all", (req, res) => {
+  //find all profiles
+  Profile.find()
+    .populate("user", ["name", "picture"])
+    .then(profiles => {
+      if (!profiles) {
+        return res.status(404).json("No profile exists");
+      }
+
+      res.json(profiles);
+    })
+    .catch(err => res.status(404).json({ profile: "No profile exists" }));
+});
 
 router.get("/user/:user_id", (req, res) => {
   Profile.findOne({ user: req.params.user_id })
