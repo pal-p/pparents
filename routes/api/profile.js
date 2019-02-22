@@ -7,6 +7,7 @@ const User = mongoose.model("users");
 require("../../models/Profile");
 const Profile = mongoose.model("profiles");
 const validateProfile = require("../../validation/profile");
+//const validateMH = require("../../validation/momHospitalisation");
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
 //get request to .../api/profile
@@ -90,4 +91,28 @@ router.get("/user/:user_id", (req, res) => {
       res.status(404).json({ profile: "No profile exists for this user" })
     );
 });
+
+//add momHospitalisation to profile
+router.post(
+  "/momHospitalisation",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const temp = {
+        problem: req.body.problem,
+        hospital: req.body.hospital,
+        location: req.body.location,
+        from: req.body.from,
+        to: req.body.to,
+        current: req.body.current,
+        description: req.body.description
+      };
+
+      // add the hospitalisation on top
+      profile.momHospitalisation.unshift(temp);
+
+      profile.save().then(profile => res.json(profile));
+    });
+  }
+);
 module.exports = router;
