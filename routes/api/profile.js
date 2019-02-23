@@ -10,6 +10,7 @@ const validateProfile = require("../../validation/profile");
 const validateMH = require("../../validation/momHospt");
 const validateMHI = require("../../validation/momHealthI");
 const validateBMI = require("../../validation/babyMedI");
+const validateNicu = require("../../validation/nicu");
 
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
@@ -179,9 +180,13 @@ router.post(
   "/nicu",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, validation } = validateNicu(req.body);
+    if (!validation) {
+      return res.status(400).json(errors);
+    }
     Profile.findOne({ user: req.user.id }).then(profile => {
       const tempNicu = {};
-      console.log(req.body);
+      //console.log(req.body);
       if (req.body.hospital) tempNicu.hospital = req.body.hospital;
       if (req.body.location) tempNicu.location = req.body.location;
       if (req.body.from) tempNicu.from = req.body.from;
