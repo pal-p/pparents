@@ -201,4 +201,22 @@ router.post(
     });
   }
 );
+//delete momHealthIssues from profile
+router.delete(
+  "/momHealthIssues/:mhi_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        //get the index of the issue
+        const indx = profile.momHealthIssues
+          .map(elem => elem.id)
+          .indexOf(req.params.mhi_id);
+        //delete the elem from this index
+        profile.momHealthIssues.splice(indx, 1);
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
 module.exports = router;
