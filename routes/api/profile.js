@@ -238,5 +238,21 @@ router.delete(
       .catch(err => res.status(404).json(err));
   }
 );
-
+//delete momHospitalisation from profile
+router.delete(
+  "/momHospitalisation/:mh_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        const indx = profile.momHospitalisation
+          .map(elem => elem.id)
+          .indexOf(req.params.mh_id);
+        //delete the elem from this index
+        profile.momHospitalisation.splice(indx, 1);
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
 module.exports = router;
