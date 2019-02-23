@@ -174,4 +174,26 @@ router.post(
     });
   }
 );
+//add nicu info to profile
+router.post(
+  "/nicu",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      const tempNicu = {};
+      console.log(req.body);
+      if (req.body.hospital) tempNicu.hospital = req.body.hospital;
+      if (req.body.location) tempNicu.location = req.body.location;
+      if (req.body.from) tempNicu.from = req.body.from;
+      if (req.body.to) tempNicu.to = req.body.to;
+      if (req.body.current) tempNicu.current = req.body.current;
+      if (req.body.description) tempNicu.description = req.body.description;
+
+      // add nicu info to profile
+      profile.nicu = tempNicu;
+
+      profile.save().then(profile => res.json(profile));
+    });
+  }
+);
 module.exports = router;

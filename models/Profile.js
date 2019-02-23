@@ -76,16 +76,16 @@ const profileSchema = new Schema({
   ],
   nicu: {
     hospital: {
-      type: String,
-      required: true
+      type: String
+      //required: true
     },
     location: {
-      type: String,
-      required: true
+      type: String
+      //required: true
     },
     from: {
-      type: Date,
-      required: true
+      type: Date
+      //required: true
     },
     to: {
       type: Date
