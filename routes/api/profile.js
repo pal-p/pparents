@@ -219,4 +219,24 @@ router.delete(
       .catch(err => res.status(404).json(err));
   }
 );
+//delete babyMedIssues from profile
+router.delete(
+  "/babyMedIssues/:bmi_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        //get the index of the issue
+        const indx = profile.babyMedIssues
+          .map(elem => elem.id)
+          .indexOf(req.params.bmi_id);
+        console.log(req.params);
+        //delete the elem from this index
+        profile.babyMedIssues.splice(indx, 1);
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
 module.exports = router;
