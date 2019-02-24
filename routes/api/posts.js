@@ -20,7 +20,9 @@ router.get("/", (req, res) => {
 router.get("/:post_id", (req, res) => {
   Post.findById(req.params.post_id)
     .then(posts => res.json(posts))
-    .catch(err => res.status(404));
+    .catch(err =>
+      res.status(404).json({ postErr: "No post exists with this id" })
+    );
 });
 
 router.post(
