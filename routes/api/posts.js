@@ -8,6 +8,29 @@ const validatePost = require("../../validation/post");
 
 router.get("/test", (req, res) => res.json({ msg: "posts is working" }));
 
+//add comment to a post
+router.post(
+  "/comment/:post_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, validation } = validatePost(req.body);
+    if (!validation) {
+      return res.status(400).json(errors);
+    }
+    Post.findById(req.params.post_id)
+      .then(post => {
+        const tempComment = {
+          user: req.user.id,
+          text: req.body.text,
+          name: req.body.name,
+          picture: req.body.picture
+        };
+        post.comments.unshift(tempComment);
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(404).json({ postErr: "Post not found" }));
+  }
+);
 //unlike a post
 router.post(
   "/unlike/:post_id",
