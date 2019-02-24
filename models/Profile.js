@@ -76,25 +76,23 @@ const profileSchema = new Schema({
   ],
   nicu: {
     hospital: {
-      type: String,
-      required: true
+      type: String
     },
     location: {
       type: String
     },
     from: {
-      type: Date,
-      required: true
+      type: Date
     },
     to: {
       type: Date
     },
+    description: {
+      type: String
+    },
     current: {
       type: Boolean,
       default: false
-    },
-    description: {
-      type: String
     }
   },
   babyMedIssues: [

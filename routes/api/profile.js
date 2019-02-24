@@ -10,7 +10,6 @@ const validateProfile = require("../../validation/profile");
 const validateMH = require("../../validation/momHospt");
 const validateMHI = require("../../validation/momHealthI");
 const validateBMI = require("../../validation/babyMedI");
-const validateNicu = require("../../validation/nicu");
 
 router.get("/test", (req, res) => res.json({ msg: "profile is working" }));
 
@@ -50,7 +49,6 @@ router.post(
     if (typeof req.body.babyBirthIssues !== "undefined") {
       profileData.babyBirthIssues = req.body.babyBirthIssues.split(",");
     }
-    console.log(req.body);
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
         // Update
@@ -60,7 +58,6 @@ router.post(
           { new: true }
         ).then(profile => res.json(profile));
       } else {
-        console.log("new profile ");
         //create and save in db
         new Profile(profileData).save().then(profile => res.json(profile));
       }
@@ -175,30 +172,30 @@ router.post(
     });
   }
 );
+
 //add nicu info to profile
 router.post(
   "/nicu",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, validation } = validateNicu(req.body);
-    if (!validation) {
-      return res.status(400).json(errors);
-    }
-    Profile.findOne({ user: req.user.id }).then(profile => {
-      const tempNicu = {};
-      //console.log(req.body);
-      if (req.body.hospital) tempNicu.hospital = req.body.hospital;
-      if (req.body.location) tempNicu.location = req.body.location;
-      if (req.body.from) tempNicu.from = req.body.from;
-      if (req.body.to) tempNicu.to = req.body.to;
-      if (req.body.current) tempNicu.current = req.body.current;
-      if (req.body.description) tempNicu.description = req.body.description;
+    const tempNicu = {};
+    //console.log(req.body);
+    if (req.body.hospital) tempNicu.hospital = req.body.hospital;
+    if (req.body.location) tempNicu.location = req.body.location;
+    if (req.body.from) tempNicu.from = req.body.from;
+    if (req.body.to) tempNicu.to = req.body.to;
+    if (req.body.current) tempNicu.current = req.body.current;
+    if (req.body.description) tempNicu.description = req.body.description;
 
-      // add nicu info to profile
-      profile.nicu = tempNicu;
-
-      profile.save().then(profile => res.json(profile));
-    });
+    Profile.findOneAndUpdate(
+      { user: req.user.id },
+      { $set: { nicu: tempNicu } },
+      { new: true }
+    )
+      .then(profile => {
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 //delete momHealthIssues from profile
@@ -255,4 +252,5 @@ router.delete(
       .catch(err => res.status(404).json(err));
   }
 );
+
 module.exports = router;
