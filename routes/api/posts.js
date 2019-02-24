@@ -8,13 +8,21 @@ const validatePost = require("../../validation/post");
 
 router.get("/test", (req, res) => res.json({ msg: "posts is working" }));
 
-//get all postsby desending date order
+//get all postsby descending date order
 router.get("/", (req, res) => {
   Post.find()
     .sort({ date: -1 })
     .then(posts => res.json(posts))
     .catch(err => res.status(404));
 });
+
+//get a post by id
+router.get("/:post_id", (req, res) => {
+  Post.findById(req.params.post_id)
+    .then(posts => res.json(posts))
+    .catch(err => res.status(404));
+});
+
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
