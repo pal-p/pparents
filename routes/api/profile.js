@@ -252,5 +252,20 @@ router.delete(
       .catch(err => res.status(404).json(err));
   }
 );
-
+//delete nicu info from profile
+router.delete(
+  "/nicu",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOneAndUpdate(
+      { user: req.user.id },
+      { $unset: { nicu: "" } },
+      { new: true }
+    )
+      .then(profile => {
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
 module.exports = router;
