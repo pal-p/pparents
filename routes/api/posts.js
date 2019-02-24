@@ -8,6 +8,34 @@ const validatePost = require("../../validation/post");
 
 router.get("/test", (req, res) => res.json({ msg: "posts is working" }));
 
+//unlike a post
+router.post(
+  "/unlike/:post_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Post.findById(req.params.post_id)
+      .then(post => {
+        if (
+          post.likes.filter(like => like.user.toString() === req.user.id)
+            .length === 0
+        ) {
+          return res
+            .status(400)
+            .json({ postNotLiked: "Post is not liked yet" });
+        }
+        //if user has liked the post, remove their id from likes
+        //get array of user ids only then get indexof curr user
+        const indx = post.likes
+          .map(elem => elem.user.toString())
+          .indexOf(req.user.id);
+        console.log(post.likes);
+        //delete the elem from this index
+        post.likes.splice(indx, 1);
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(404).json({ postErr: "Post not found" }));
+  }
+);
 //like a post
 router.post(
   "/like/:post_id",
