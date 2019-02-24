@@ -8,6 +8,30 @@ const validatePost = require("../../validation/post");
 
 router.get("/test", (req, res) => res.json({ msg: "posts is working" }));
 
+//delete comment from a post
+router.delete(
+  "/comments/:post_id/:comment_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Post.findById(req.params.post_id)
+      .then(post => {
+        if (
+          post.comments.filter(
+            comnt => comnt._id.toString() === req.params.comment_id
+          ).length === 0
+        ) {
+          return res.status(400).json({ noComment: "There is no comment" });
+        }
+        const indx = post.comments
+          .map(elem => elem._id.toString())
+          .indexOf(req.params.comment_id);
+
+        post.comments.splice(indx, 1);
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(404).json({ postErr: "Post not found" }));
+  }
+);
 //add comment to a post
 router.post(
   "/comment/:post_id",
