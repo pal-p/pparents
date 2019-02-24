@@ -8,22 +8,24 @@ const validatePost = require("../../validation/post");
 
 router.get("/test", (req, res) => res.json({ msg: "posts is working" }));
 
-//delete post by id
-router.delete(
-  "/:post_id",
+//like a post
+router.post(
+  "/like/:post_id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Post.findById(req.params.post_id)
       .then(post => {
-        // Check if the login user is the owner of the post
-        if (post.user.toString() !== req.user.id) {
-          return res.status(401).json({ authErr: "Not authorised" });
+        if (
+          post.likes.filter(like => like.user.toString() === req.user.id)
+            .length > 0
+        ) {
+          return res.status(400).json({ postLiked: "Post is already liked" });
         }
-        post.remove().then(() => res.json({ postDeleted: true }));
+        //if user has not liked the post, add their id in likes
+        post.likes.push({ user: req.user.id });
+        post.save().then(post => res.json(post));
       })
-      .catch(err =>
-        res.status(404).json({ postErr: "No posts exists with this id" })
-      );
+      .catch(err => res.status(404).json({ postErr: "Post not found" }));
   }
 );
 //get all postsby descending date order
